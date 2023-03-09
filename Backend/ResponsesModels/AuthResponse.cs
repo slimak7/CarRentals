@@ -2,9 +2,9 @@
 {
     public class AuthResponse : BaseResponse
     {
-        string? userID;
-        string? token;
-        public AuthResponse(List<string> errors, bool success, string userID, string token) : base(errors, success)
+        public string? userID { get; set; }
+        public string? token { get; set; }
+        public AuthResponse(List<string>? errors, bool success, string userID, string token) : base(errors, success)
         {
             this.userID = userID;
             this.token = token;

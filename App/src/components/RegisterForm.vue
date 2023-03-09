@@ -38,7 +38,7 @@
         </div>
 
         <div v-if="errorMessage" class="error">
-            <p>{{ errorMessage.format(1) }}</p>
+            <p>{{ errorMessage }}</p>
         </div>
 
         <p v-if="infoVisibility" class="mb-3">
@@ -80,7 +80,7 @@ export default {
   },
   created() {
     if (this.getUser) {
-      this.$router.push('/profile')
+      this.$router.push('/')
     }
 
     this.emailLabel = 'Email'
@@ -105,6 +105,7 @@ export default {
 
     this.$store.dispatch('auth/register', user).then(
         () => {
+            window.location.reload();
             this.$router.push('/')
         },
         (err) => {

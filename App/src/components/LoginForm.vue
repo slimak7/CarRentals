@@ -59,8 +59,9 @@ export default {
       }
 
       this.$store.dispatch('auth/login', user).then(
-        () => {
-          this.$router.push('/')
+          () => {         
+              window.location.reload();
+              this.$router.push('/')
         },
         (err) => {
           this.errorMessage = err?.response?.data.errors[0];

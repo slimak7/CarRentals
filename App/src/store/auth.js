@@ -5,7 +5,7 @@ const user = JSON.parse(localStorage.getItem('user'))
 export const auth = {
     namespaced: true,
     state: {
-        user: user,
+        user: user
     },
     mutations: {
         login(state, user) {
@@ -19,7 +19,10 @@ export const auth = {
         login({ commit }, user) {
             return AuthService.login(user).then(
                 (response) => {
-                    commit('login', response.data)
+                    const newUser = { email: user.email, id: response.data.userID, token: response.data.token }
+                    commit('login', newUser)
+                    localStorage.setItem('user', JSON.stringify(newUser))
+
                     return Promise.resolve(response.data)
                 },
                 (error) => {
@@ -27,19 +30,24 @@ export const auth = {
                 }
             )
         },
-        logout({ commit }) {            
+        logout({ commit }) {
             commit('logout')
+            localStorage.removeItem('user')
         },
         register({ commit }, user) {
             return AuthService.register(user).then(
                 (response) => {
-                    commit('login', response.data)
+                    const newUser = { email: user.email, id: response.data.userID, token: response.data.token }
+                    commit('login', newUser)
+                    localStorage.setItem('user', JSON.stringify(newUser))
                     return Promise.resolve(user)
                 },
                 (error) => {
+
                     return Promise.reject(error)
                 }
             )
         },
     },
+
 }

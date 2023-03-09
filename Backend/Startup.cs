@@ -1,4 +1,5 @@
 ﻿using Backend.Context;
+using Backend.DBLogic.Repos.Users;
 using Backend.Services.Implementations;
 using Backend.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -26,6 +27,13 @@ namespace Backend
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(o => o.AddPolicy("AllowAnyOrigins", builder =>
+            {
+                builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            }));
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -72,9 +80,10 @@ namespace Backend
             */
 
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IUsersRepo, UsersRepo>();
 
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("DBCarRenting")));
+            services.AddDbContext<AppDbContext>(options => options
+            .UseSqlServer(Configuration.GetConnectionString("DBCarRenting")).UseLazyLoadingProxies());
 
         }
 
@@ -97,6 +106,13 @@ namespace Backend
 
             app.UseRouting();
 
+            app.UseCors(builder =>
+            {
+                builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+            });
+
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -104,6 +120,8 @@ namespace Backend
             {
                 endpoints.MapControllers();
             });
+
+           
         }
 
     }

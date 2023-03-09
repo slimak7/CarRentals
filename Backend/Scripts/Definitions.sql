@@ -9,7 +9,10 @@ go
 
 --[DROP TABLES]-----------------------------------------------------------------------------------------------------------
 
-
+if object_id('Reservations') is not null
+begin
+drop table Reservations
+end
 if object_id('Users') is not null
 begin
 drop table Users
@@ -30,6 +33,7 @@ if object_id('CarsModels') is not null
 begin
 drop table CarsModels
 end
+go
 
 --[CREATE TABLES]-----------------------------------------------------------------------------------------------------------
 
@@ -61,7 +65,8 @@ CarModelID uniqueidentifier primary key,
 ModelName varchar(50),
 ModelRange integer,
 Acceleration real,
-MaxNumberOfSeats integer)
+MaxNumberOfSeats integer,
+PricePerDay real)
 go
 
 create table Cars (

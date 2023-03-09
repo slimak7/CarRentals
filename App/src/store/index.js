@@ -4,10 +4,8 @@ import Vue from 'vue'
 
 Vue.use(Vuex)
 
-const store = new Vuex.Store({
+export default new Vuex.Store({
     modules: {
         auth,
     },
 })
-
-export default store

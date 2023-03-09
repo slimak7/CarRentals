@@ -2,8 +2,8 @@
 {
     public class BaseResponse
     {
-        protected bool success { get; set; }
-        protected List<string> errors { get; set; }
+        public bool success { get; set; }
+        public List<string>? errors { get; set; }
 
         protected BaseResponse(List<string> errors, bool success) 
         { 
