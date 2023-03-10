@@ -23,7 +23,7 @@
 import RegisterForm from '../components/RegisterForm.vue'
 
 export default {
-  name: 'LoginPage',
+  name: 'RegisterPage',
   components: {
     RegisterForm,
   },

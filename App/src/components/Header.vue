@@ -34,8 +34,8 @@ export default {
   methods: {
       logout() {
         this.$store.dispatch('auth/logout')
-        window.location.reload();
-        this.$router.push('/')
+          this.$router.push('/')
+          window.location.reload();
     }
   },
 }

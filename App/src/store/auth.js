@@ -1,15 +1,14 @@
 import AuthService from '../services/auth'
 
-const user = JSON.parse(localStorage.getItem('user'))
-
 export const auth = {
     namespaced: true,
     state: {
-        user: user
+        user: null
     },
     mutations: {
         login(state, user) {
-            state.user = user
+            const newUser = { email: user.email, id: user.userID, token: user.token, userType: user.userType }
+            state.user = newUser
         },
         logout(state) {
             state.user = null
@@ -19,30 +18,40 @@ export const auth = {
         login({ commit }, user) {
             return AuthService.login(user).then(
                 (response) => {
-                    const newUser = { email: user.email, id: response.data.userID, token: response.data.token }
-                    commit('login', newUser)
-                    localStorage.setItem('user', JSON.stringify(newUser))
+                    
+                    commit('login', response.data)
 
                     return Promise.resolve(response.data)
                 },
                 (error) => {
+
+                    if (error.status == 401) {
+                        commit('logout');
+                        window.location.reload();
+                        this.$router.push('/')
+                    }
+
                     return Promise.reject(error)
                 }
             )
         },
         logout({ commit }) {
             commit('logout')
-            localStorage.removeItem('user')
         },
         register({ commit }, user) {
             return AuthService.register(user).then(
                 (response) => {
-                    const newUser = { email: user.email, id: response.data.userID, token: response.data.token }
-                    commit('login', newUser)
-                    localStorage.setItem('user', JSON.stringify(newUser))
+
+                    commit('login', response.data)
                     return Promise.resolve(user)
                 },
                 (error) => {
+
+                    if (error.status == 401) {
+                        commit('logout');
+                        window.location.reload();
+                        this.$router.push('/')
+                    }
 
                     return Promise.reject(error)
                 }

@@ -35,7 +35,7 @@ namespace Backend.Services.Implementations
                 {
                     string token = GenerateToken(user);
 
-                    return new AuthResponse(null, true, user.UserID.ToString(), token);
+                    return new AuthResponse(null, true, user.UserID.ToString(), token, user.UserType.TypeName, user.Email);
                 }
                 else
                 {
@@ -61,7 +61,7 @@ namespace Backend.Services.Implementations
 
                 string token = GenerateToken(newUser);
 
-                return new AuthResponse(null, true, newUser.UserID.ToString(), token);
+                return new AuthResponse(null, true, newUser.UserID.ToString(), token, newUser.UserType.TypeName, user.Email);
             }
             else
             {
