@@ -9,3 +9,11 @@ Update #2
 Small changes in DB: PricePerDay added into the CarsModels table. 
 Also I have decided to use bootstrap to create some acceptable view. 
 While working on backend I assumed that accounts with type "Staff" will be added to the database through SQL scripts and appropriate endpoints will only serve purpose to add clients. The right way may be to create some admin console and create different endpoints to add clients and staff but it will be too time consuming and right now I want to focus more on car renting and reservations system.
+Update #3
+Basic assumptions on car renting system:
+1. Client can choose location and see what cars are currently available to book them starting from the next day.
+2. After choosing location client can also see all cars even if they aren't currently in this particular location and book one of them but there will be one day delay to transport this car to the chosen location. So in this case the booking period starts in second day counting from the day he tries to do reservation. 
+3. Between every reservation there has to be one day off to make sure that every car will be delivered for time to particular location. 
+4. Also client can rent a car which is currently rented if periods of time don't collide with each other and there is a one day off between them.
+5. Reservations can be made by clients for 2 next months starting from current month (for example: if it is March, reservations are available for March, April and May).
+6. There is no need to show clients lots of cars of the same model. For client only necessary info will be the fact that for chosen period of time the car will be available. The decision which concrete car has to be booked is made by server with focus on to reserve firstly these cars which have some reservations but not for chosen time period. So the server tries to keep available as many cars as possible.
