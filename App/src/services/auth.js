@@ -1,5 +1,5 @@
 import axios from 'axios'
-import getCommonHeadersJSONContent from './commonHeaders'
+import CommonHeaders from './commonHeaders.js'
 
 const API_URL = process.env.VUE_APP_BACKEND_URL
 
@@ -9,12 +9,12 @@ class AuthService {
         const response = await axios.post(url, {
             email : user.email,
             password: user.password,
-        }, { headers: getCommonHeadersJSONContent() })
+        }, { headers: CommonHeaders.getCommonHeadersJSONContent })
         return response;
     }
 
     async register(user) {
-        console.log(user);
+
         const url = API_URL + 'Auth/Register';
         const response = await axios
             .post(url, {
@@ -23,7 +23,7 @@ class AuthService {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 phoneNumber: user.phoneNumber
-            }, { headers: getCommonHeadersJSONContent() })
+            }, { headers: commonHeaders.getCommonHeadersJSONContent })
 
         return response;
     }

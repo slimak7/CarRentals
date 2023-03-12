@@ -84,7 +84,8 @@ namespace Backend.Services.Implementations
                 new Claim(ClaimTypes.Role, role.TypeName),
             };
 
-            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
+            var token = new JwtSecurityToken(
+                _config["Jwt:Issuer"],
                 _config["Jwt:Audience"],
                 claims,
                 expires: DateTime.Now.AddMinutes(30),

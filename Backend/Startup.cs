@@ -1,4 +1,5 @@
 ﻿using Backend.Context;
+using Backend.DBLogic.Repos.Locations;
 using Backend.DBLogic.Repos.Users;
 using Backend.Services.Implementations;
 using Backend.Services.Interfaces;
@@ -27,13 +28,6 @@ namespace Backend
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(o => o.AddPolicy("AllowAnyOrigins", builder =>
-            {
-                builder.AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-            }));
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -46,8 +40,20 @@ namespace Backend
                     ValidIssuer = Configuration["Jwt:Issuer"],
                     ValidAudience = Configuration["Jwt:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                        Configuration["Jwt:Key"]))
+                        Configuration["Jwt:Key"])),
+
                 };
+            });
+
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MyPolicy",
+                            builder => builder.WithOrigins("http://localhost:8080")
+                                    .AllowAnyMethod()
+                                    .AllowAnyHeader()
+                                    .AllowCredentials()
+                            );
             });
 
             services.AddControllers();
@@ -62,25 +68,12 @@ namespace Backend
                 });
 
             });
-            /*
-
-            services.AddScoped<IUserRepo, UserRepo>();
-            services.AddScoped<IAddressRepo, AddressRepo>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IUserRolesRepo, UsersRolesRepo>();
-            services.AddScoped<IFacilityRepo, FacilityRepo>();
-            services.AddScoped<IFacilityService, FacilityService>();
-            services.AddScoped<IDoctorsRepo, DoctorsRepo>();
-            services.AddScoped<IDoctorService, DoctorService>();
-            services.AddScoped<IDoctorsSchedulesRepo, DoctorsSchedulesRepo>();
-            services.AddScoped<IVisitRepo, VisitRepo>();
-
             
-
-            */
 
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUsersRepo, UsersRepo>();
+            services.AddScoped<ILocationsRepo, LocationsRepo>();
+            services.AddScoped<ILocationsService, LocationsService>();
 
             services.AddDbContext<AppDbContext>(options => options
             .UseSqlServer(Configuration.GetConnectionString("DBCarRenting")).UseLazyLoadingProxies());
@@ -101,27 +94,19 @@ namespace Backend
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Car renting app API"));
             }
+            app.UseCors("MyPolicy");
 
             app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseCors(builder =>
-            {
-                builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader();
-            });
-
             app.UseAuthentication();
+            app.UseRouting();            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
             });
 
-           
         }
 
     }

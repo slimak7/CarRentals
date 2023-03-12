@@ -18,7 +18,7 @@ namespace Backend.DBLogic.Repos.Users
             element.UserTypeIDFK = await GetUserType("Client");
             var entry = await _appDbContext.Users.AddAsync(element);
 
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
 
             return entry.Entity;
         }
@@ -27,17 +27,17 @@ namespace Backend.DBLogic.Repos.Users
         {
             var user = await GetById(id);
 
-            _appDbContext.Users.Remove(user);
-            _appDbContext.SaveChanges();
+            var deleted = _appDbContext.Users.Remove(user);
+            await _appDbContext.SaveChangesAsync();
 
-            return user;
+            return deleted.Entity;
         }
 
         public async Task<User> Delete(User element)
         {
             var entry = _appDbContext.Users.Remove(element);
 
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
 
             return entry.Entity;
         }
@@ -62,6 +62,7 @@ namespace Backend.DBLogic.Repos.Users
         public async Task<User> Update(User element)
         {
             var entry = _appDbContext.Users.Update(element);
+            await _appDbContext.SaveChangesAsync();
 
             return entry.Entity;
         }

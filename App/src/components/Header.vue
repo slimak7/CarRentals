@@ -33,9 +33,11 @@ export default {
   },
   methods: {
       logout() {
-        this.$store.dispatch('auth/logout')
+          this.$store.dispatch('auth/logout')
           this.$router.push('/')
           window.location.reload();
+          
+          
     }
   },
 }

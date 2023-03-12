@@ -1,12 +1,24 @@
+import store from '@/store/index'
 
-function getCommonHeaderJSONContent() {
+class CommonHeaders {
+
+    getCommonHeaderJSONContent() {
    
+        return {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        }
+    }
 
-    return {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
+    getCommonGetHeaderWithType() {
+   
+        return {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Role: this.$store.state.auth.user.userType
+        }
     }
 }
 
-export default getCommonHeaderJSONContent
+export default new CommonHeaders();
    
