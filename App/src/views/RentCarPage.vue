@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3>Choose location</h3>
+        <h2>Choose location</h2>
 
         <div class="container">
             <div class="d-flex mt-5 justify-content-center">
@@ -10,12 +10,29 @@
                         <div class="card-body">
                             <h5 class="card-title">{{item.city}}</h5>
                             <p class="card-text">"{{item.street}} {{item.zipcode}}"</p>
-                            <a href="#" class="btn btn-primary">Select</a>
+                            <a v-if='selectedLocation != item' class="btn btn-primary" @click="selectLocation(item)">Select</a>
+                            <a v-else class="btn btn-primary disabled">Selected</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div v-if="selectedLocation">
+            <label>Choose date range</label>
+            <div class="d-flex mt-5 justify-content-center">
+
+                <div>
+                    <b-form-datepicker id="fromDatepicker" v-model="fromDate" class="mb-2" :min="min" :max="max" locale="en"></b-form-datepicker>
+                </div>
+                <div>
+                    <b-form-datepicker id="toDatepicker" v-model="toDate" class="mb-2" :min="min" :max="max" locale="en"></b-form-datepicker>
+                </div>
+            </div>
+        </div>
+        <div v-if="fromDate && toDate">
+            <a class="btn btn-primary">Search</a>           
+        </div>
+
     </div>
 </template>
 
@@ -24,17 +41,42 @@ import LocationService from '../services/locations'
 export default {
         name: 'RentCarPage',
         data() {
+            const now = new Date()
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+            const minDate = new Date(today)
+            minDate.setDate(today.getDate() + 1)
+            const maxDate = new Date(today)
+            maxDate.setMonth(today.getMonth() + 2)
+            const maxDay = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+            maxDate.setDate(maxDay.getDate())
             return {
                 locations: [],
-                token: this.$store.state.auth.user.token
+                selectedLocation: null,
+                fromDate: null,
+                toDate: null,
+                min: minDate,
+                max: maxDate
             }
         },
         async created() {
 
             var response = await LocationService.getAllLocations();
+
+            if (response.status == 401) {
+                this.$store.dispatch('auth/logout')
+                this.$router.push('/')
+                window.location.reload();
+            }
+
             this.locations = response.data.locations;
-            console.log(this.locations);
+           
             
+        },
+        methods: {
+
+            selectLocation(location) {
+                this.selectedLocation = location;
+            }
         }
 }
 </script>
@@ -46,10 +88,11 @@ export default {
     }
     .card {
         width: 300px !important;
-        margin: 10px
+        margin: 2px
         
     }
     .card a {
-        background-color: darkblue
+        background-color: darkblue;
     }
+    
 </style>
