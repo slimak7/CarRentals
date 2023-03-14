@@ -30,14 +30,46 @@
             </div>
         </div>
         <div v-if="fromDate && toDate">
-            <a class="btn btn-primary">Search</a>           
+            <a class="btn btn-primary" @click="searchForCars">Search</a>           
         </div>
-
-    </div>
+        <div v-if="availableCarsModels">
+            <div class="container">
+                <div class="d-flex mt-4 justify-content-center">
+                    <div v-for="(item, index) in availableCarsModels" v-bind:key="index">
+                        <div class="card text-white bg-primary mb-3">
+                            <h5 class="card-header">{{item.modelName}}</h5>
+                            <div class="card-body">
+                                <h5 class="card-title">{{item.modelRange}} km</h5>
+                                <p class="card-text">"{{item.acceleration}} s to 100 km/h</p>
+                                <p class="card-text">up to {{item.maxNumberOfSeats}} seats</p>
+                                <p class="card-text">{{item.pricePerDay}} <i class="bi bi-currency-euro"></i> per day</p>
+                                <a v-if='selectedCar != item' class="btn btn-primary" @click="selectCar(item)">Select</a>
+                                <a v-else class="btn btn-primary disabled">Selected</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-if="totalCost">
+            <div class="container">
+                <div class="d-flex mt-4 justify-content-center">
+                    <div class="card text-white bg-primary mb-3">
+                        <h5 class="card-header">Total cost</h5>
+                        <div class="card-body">
+                            <p class="card-text">{{totalCost}} <i class="bi bi-currency-euro"></i></p>
+                            <a class="btn btn-primary" @click="makeReservation">Book</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
 </template>
 
 <script>
-import LocationService from '../services/locations'
+    import LocationService from '../services/locations'
+    import ReservationsService from '../services/reservations'
 export default {
         name: 'RentCarPage',
         data() {
@@ -52,30 +84,75 @@ export default {
             return {
                 locations: [],
                 selectedLocation: null,
-                fromDate: null,
-                toDate: null,
+                fromDate: '',
+                toDate: '',
                 min: minDate,
-                max: maxDate
+                max: maxDate,
+                availableCarsModels: [],
+                selectedCar: null
+            }
+        },
+        computed: {
+
+            totalCost() {
+                if  (this.fromDate && this.toDate && this.selectedCar) {
+
+                    const startingDate = new Date(this.fromDate);
+                    const endingDate = new Date(this.toDate);
+
+                    return (((endingDate.getTime()-startingDate.getTime())/(24*3600*1000)) + 1) * this.selectedCar.pricePerDay;
+                }
+                else return null;
             }
         },
         async created() {
 
-            var response = await LocationService.getAllLocations();
-
-            if (response.status == 401) {
-                this.$store.dispatch('auth/logout')
-                this.$router.push('/')
-                window.location.reload();
-            }
-
-            this.locations = response.data.locations;
-           
+            await LocationService.getAllLocations().then((response) => {
+                
+                this.locations = response.data.locations;
+            }).catch((error) => {
+                if (error.response.status == 401) {
+                    
+                    this.$store.dispatch('auth/logout')
+                    this.$router.push('/')
+                    window.location.reload();
+                }
+            });
+            
             
         },
         methods: {
 
             selectLocation(location) {
                 this.selectedLocation = location;
+                this.selectedCar = null;
+                this.availableCarsModels = [];
+            },
+            selectCar(car) {
+                this.selectedCar = car;
+            },
+            makeReservation() {
+
+
+            },
+            async searchForCars() {
+
+                await ReservationsService.getAvailableCars(this.selectedLocation.locationID, this.fromDate, this.toDate).then((response) => {
+                    this.availableCarsModels = response.data.cars;
+                    
+                }).catch((error) => {
+                    if (error.response.status == 401) {
+
+                        this.$store.dispatch('auth/logout')
+                        this.$router.push('/')
+                        window.location.reload();
+                    }
+                    else {
+
+                        console.log(error);
+                    }
+                })
+
             }
         }
 }

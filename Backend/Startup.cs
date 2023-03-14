@@ -1,5 +1,7 @@
 ﻿using Backend.Context;
+using Backend.DBLogic.Repos.Cars;
 using Backend.DBLogic.Repos.Locations;
+using Backend.DBLogic.Repos.Reservations;
 using Backend.DBLogic.Repos.Users;
 using Backend.Services.Implementations;
 using Backend.Services.Interfaces;
@@ -74,6 +76,9 @@ namespace Backend
             services.AddScoped<IUsersRepo, UsersRepo>();
             services.AddScoped<ILocationsRepo, LocationsRepo>();
             services.AddScoped<ILocationsService, LocationsService>();
+            services.AddScoped<ICarsRepo, CarsRepo>();
+            services.AddScoped<ICarsService, CarsService>();
+            services.AddScoped<IReservationsRepo, ReservationsRepo>();
 
             services.AddDbContext<AppDbContext>(options => options
             .UseSqlServer(Configuration.GetConnectionString("DBCarRenting")).UseLazyLoadingProxies());

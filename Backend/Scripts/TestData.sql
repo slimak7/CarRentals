@@ -25,7 +25,7 @@ select * from Locations
 
 --[CARS RANDOM TEST DATA]-------------------------------------------------------------------------------------------------------
 
-declare @numberOfCars int = 50;
+declare @numberOfCars int = 20;
 
 while (@numberOfCars > 0) 
 begin
