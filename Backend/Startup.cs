@@ -79,6 +79,7 @@ namespace Backend
             services.AddScoped<ICarsRepo, CarsRepo>();
             services.AddScoped<ICarsService, CarsService>();
             services.AddScoped<IReservationsRepo, ReservationsRepo>();
+            services.AddScoped<IReservationsService, ReservationsService>();
 
             services.AddDbContext<AppDbContext>(options => options
             .UseSqlServer(Configuration.GetConnectionString("DBCarRenting")).UseLazyLoadingProxies());

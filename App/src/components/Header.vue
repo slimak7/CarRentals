@@ -16,6 +16,9 @@
                 <div v-if="currentUser" class="nav-item">
                     <span class="nav-link disabled"> {{ currentUser.email }} </span>
                 </div>
+                <div v-if="currentUser && currentUser.userType == 'Client'" class="nav-item">
+                    <router-link class="nav-link" to="/myReservations"> My reservations </router-link>
+                </div>
             </b-navbar-nav>
         </b-navbar>
     </div>
@@ -29,7 +32,7 @@ export default {
   computed: {
     currentUser() {
         return this.$store.state.auth.user
-    }
+    },
   },
   methods: {
       logout() {

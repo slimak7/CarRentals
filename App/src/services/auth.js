@@ -23,7 +23,7 @@ class AuthService {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 phoneNumber: user.phoneNumber
-            }, { headers: commonHeaders.getCommonHeadersJSONContent })
+            }, { headers: CommonHeaders.getCommonHeadersJSONContent })
 
         return response;
     }

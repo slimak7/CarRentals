@@ -22,15 +22,15 @@
             <div class="d-flex mt-5 justify-content-center">
 
                 <div>
-                    <b-form-datepicker id="fromDatepicker" v-model="fromDate" class="mb-2" :min="min" :max="max" locale="en"></b-form-datepicker>
+                    <b-form-datepicker id="fromDatepicker" v-model="fromDate" class="mb-2" :min="min" :max="maxFromDate" locale="en"></b-form-datepicker>
                 </div>
                 <div>
-                    <b-form-datepicker id="toDatepicker" v-model="toDate" class="mb-2" :min="min" :max="max" locale="en"></b-form-datepicker>
+                    <b-form-datepicker id="toDatepicker" v-model="toDate" class="mb-2" :min="minToDate" :max="max" locale="en"></b-form-datepicker>
                 </div>
             </div>
         </div>
         <div v-if="fromDate && toDate">
-            <a class="btn btn-primary" @click="searchForCars">Search</a>           
+            <a class="btn btn-primary" @click="searchForCars">Search</a>
         </div>
         <div v-if="availableCarsModels">
             <div class="container">
@@ -40,7 +40,7 @@
                             <h5 class="card-header">{{item.modelName}}</h5>
                             <div class="card-body">
                                 <h5 class="card-title">{{item.modelRange}} km</h5>
-                                <p class="card-text">"{{item.acceleration}} s to 100 km/h</p>
+                                <p class="card-text">{{item.acceleration}} s to 100 km/h</p>
                                 <p class="card-text">up to {{item.maxNumberOfSeats}} seats</p>
                                 <p class="card-text">{{item.pricePerDay}} <i class="bi bi-currency-euro"></i> per day</p>
                                 <a v-if='selectedCar != item' class="btn btn-primary" @click="selectCar(item)">Select</a>
@@ -58,13 +58,19 @@
                         <h5 class="card-header">Total cost</h5>
                         <div class="card-body">
                             <p class="card-text">{{totalCost}} <i class="bi bi-currency-euro"></i></p>
-                            <a class="btn btn-primary" @click="makeReservation">Book</a>
+                            <b-button v-b-modal.modal-1 variant="dark">Book</b-button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div v-if="totalCost">
+            <b-modal id="modal-1" title="Confirm reservation" @ok="makeReservation">
+                <p class="my-4">Are You sure You want to rent {{selectedCar.modelName}}</p>
+                <p class="my-4">from {{fromDate}} to {{toDate}} for {{totalCost}}<i class="bi bi-currency-euro"></i>?</p>
+            </b-modal>
         </div>
+    </div>
 </template>
 
 <script>
@@ -103,6 +109,24 @@ export default {
                     return (((endingDate.getTime()-startingDate.getTime())/(24*3600*1000)) + 1) * this.selectedCar.pricePerDay;
                 }
                 else return null;
+            },
+            minToDate() {
+
+                if (this.fromDate) {
+                    const minDate = new Date(this.fromDate);
+                    minDate.setDate(minDate.getDate() + 1);
+                    return minDate;
+                }
+                else return this.minDate;
+                
+            },
+            maxFromDate() {
+                if (this.toDate) {
+                    const maxDate = new Date(this.toDate);
+                    maxDate.setDate(maxDate.getDate() - 1);
+                    return maxDate;
+                }
+                else return this.maxDate;
             }
         },
         async created() {
@@ -131,9 +155,24 @@ export default {
             selectCar(car) {
                 this.selectedCar = car;
             },
-            makeReservation() {
+            async makeReservation() {
 
+                await ReservationsService.makeReservation(this.selectedCar.carModelID, this.selectedLocation.locationID, this.fromDate, this.toDate).then((response) => {
 
+                    this.$router.push('/myReservations')
+
+                }).catch(error => {
+                    if (error.response.status == 401) {
+
+                        this.$store.dispatch('auth/logout')
+                        this.$router.push('/')
+                        window.location.reload();
+                    }
+                    else {
+
+                        console.log(error);
+                    }
+                })
             },
             async searchForCars() {
 
@@ -153,7 +192,8 @@ export default {
                     }
                 })
 
-            }
+            },
+            
         }
 }
 </script>
@@ -171,5 +211,6 @@ export default {
     .card a {
         background-color: darkblue;
     }
+  
     
 </style>

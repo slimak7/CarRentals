@@ -29,7 +29,7 @@ namespace Backend.Controllers
             }
             catch (Exception e)
             {
-                return new BadRequestObjectResult(new AuthResponse(e.Message));
+                return new BadRequestObjectResult(new BaseResponse(new List<string> { e.Message }, false));
             }
         }
     }

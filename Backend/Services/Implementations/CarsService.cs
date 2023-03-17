@@ -4,6 +4,8 @@ using Backend.DBLogic.Repos.Cars;
 using Backend.DBLogic.Repos.Reservations;
 using Backend.ResponsesModels;
 using Backend.Services.Interfaces;
+using Itenso.TimePeriod;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Backend.Services.Implementations
 {
@@ -24,43 +26,50 @@ namespace Backend.Services.Implementations
         {
             var nonReservedCars = new List<Car>();
 
+            TimeRange givenTimeRange = new TimeRange(fromDate.AddDays(-1), toDate.AddDays(1));
+
+            List<Car> cars;
+
             if (fromDate.Date == DateTime.Now.Date.AddDays(1))
             {
-                var cars = await _carsRepo.GetAllByCondition(x => x.LocationIDFK == locationID);
+                cars = await _carsRepo.GetAllByCondition(x => x.LocationIDFK == locationID);
 
-                foreach(var car in cars)
-                {
-                    if (nonReservedCars.Any(x => x.Model.CarModelID == car.Model.CarModelID))
-                    {
-                        continue;
-                    }
-
-                    var reservation = await _reservationsRepo.GetByCondition(x => x.CarIDFK == car.LicensePlateID);
-
-                    if (reservation == null || reservation.DateTo.Date <= fromDate.Date.AddDays(-2))
-                    {
-                        nonReservedCars.Add(car);
-                    }                    
-                }
             }
             else
             {
-                var cars = await _carsRepo.GetAll();
+                cars = await _carsRepo.GetAll();
+            }
 
-                foreach (var car in cars)
+            foreach (var car in cars)
+            {
+                if (nonReservedCars.Any(x => x.Model.CarModelID == car.Model.CarModelID))
                 {
-                    if (nonReservedCars.Any(x => x.Model.CarModelID == car.Model.CarModelID))
+                    continue;
+                }
+
+                var reservations = await _reservationsRepo.GetAllByCondition(x => x.CarIDFK == car.LicensePlateID);
+
+                if (reservations.IsNullOrEmpty())
+                {
+                    nonReservedCars.Add(car);
+                }
+                else
+                {
+                    bool isAvailable = true;
+                    foreach (var reservation in reservations)
                     {
-                        continue;
+                        TimeRange reservationTimeRange = new TimeRange(reservation.DateFrom, reservation.DateTo);
+
+                        if (reservationTimeRange.IntersectsWith(givenTimeRange))
+                        {
+                            isAvailable = false; break;
+                        }
                     }
 
-                    var reservation = await _reservationsRepo.GetByCondition(x => x.CarIDFK == car.LicensePlateID);
-
-                    if (reservation == null || reservation.DateTo.Date <= fromDate.Date.AddDays(-2))
+                    if (isAvailable)
                     {
                         nonReservedCars.Add(car);
                     }
-                    
                 }
             }
 

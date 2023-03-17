@@ -61,7 +61,7 @@ namespace Backend.Services.Implementations
 
                 string token = GenerateToken(newUser);
 
-                return new AuthResponse(null, true, newUser.UserID.ToString(), token, newUser.UserType.TypeName, user.Email);
+                return new AuthResponse(null, true, newUser.UserID.ToString(), token, newUser.UserType.TypeName, newUser.Email);
             }
             else
             {

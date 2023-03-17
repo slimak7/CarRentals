@@ -83,7 +83,8 @@ DateFrom Date,
 DateTo Date,
 isPickedUp bit,
 UserIDFK uniqueidentifier foreign key references Users(UserID),
-CarIDFK varchar(10) foreign key references Cars(LicensePlateID))
+CarIDFK varchar(10) foreign key references Cars(LicensePlateID),
+LocationIDFK uniqueidentifier foreign key references Locations(LocationID))
 go
 
 

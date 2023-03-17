@@ -45,6 +45,13 @@ namespace Backend.DBLogic.Repos.Reservations
             return await _appDbContext.Reservations.ToListAsync();
         }
 
+        public async Task<List<Reservation>> GetAllByCondition(Func<Reservation, bool> condition)
+        {
+            var reservations = await GetAll();
+
+            return reservations.FindAll(x => condition(x));
+        }
+
         public async Task<Reservation> GetByCondition(Func<Reservation, bool> condition)
         {
             var reservations = await GetAll();
