@@ -45,6 +45,9 @@ export default {
             if (this.$store.state.auth.user && this.$store.state.auth.user.userType == 'Client') {
                 this.$router.push('/carRenting')
             }
+            else if (this.$store.state.auth.user && this.$store.state.auth.user.userType == 'Staff') {
+                this.$router.push('/allReservations')
+            }
         }
 }
 </script>

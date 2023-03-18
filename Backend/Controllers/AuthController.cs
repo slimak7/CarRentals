@@ -1,4 +1,5 @@
-﻿using Backend.RequestsModels;
+﻿using Backend.Exceptions;
+using Backend.RequestsModels;
 using Backend.ResponsesModels;
 using Backend.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -32,9 +33,13 @@ namespace Backend.Controllers
 
                 return Ok(response);
             }
+            catch (PostException e)
+            {
+                return BadRequest(new BaseResponse(new List<string> { e.Message }, false));
+            }
             catch (Exception e)
             {
-                return new BadRequestObjectResult(new AuthResponse(e.Message));
+                return Problem(e.Message);
             }
         }
 
@@ -52,9 +57,13 @@ namespace Backend.Controllers
 
                 return Ok(response);
             }
+            catch (PostException e)
+            {
+                return BadRequest(new BaseResponse(new List<string> { e.Message }, false));
+            }
             catch (Exception e)
             {
-                return new BadRequestObjectResult(new AuthResponse(e.Message));
+                return Problem(e.Message);
             }
         }
     }

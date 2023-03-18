@@ -1,4 +1,5 @@
 ﻿using Backend.DBLogic.Repos.Locations;
+using Backend.Exceptions;
 using Backend.ResponsesModels;
 using Backend.Services.Interfaces;
 
@@ -37,7 +38,7 @@ namespace Backend.Services.Implementations
             }
             else
             {
-                throw new Exception("Can not load locations");
+                throw new GetException("There are no locations in database");
             }
 
         }

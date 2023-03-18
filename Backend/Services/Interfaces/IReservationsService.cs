@@ -7,5 +7,7 @@ namespace Backend.Services.Interfaces
         Task<BaseResponse> MakeReservation(Guid ClientID, Guid CarModelID, Guid LocationID, DateTime DateFrom, DateTime DateTo);
 
         Task<ReservationsResponse> GetUserReservations(Guid userID);
+
+        Task<ReservationsResponseStaff> GetUsersReservationsStaff(int fromNumber, int toNumber);
     }
 }

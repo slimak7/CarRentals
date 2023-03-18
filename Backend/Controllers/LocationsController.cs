@@ -1,4 +1,5 @@
-﻿using Backend.RequestsModels;
+﻿using Backend.Exceptions;
+using Backend.RequestsModels;
 using Backend.ResponsesModels;
 using Backend.Services.Implementations;
 using Backend.Services.Interfaces;
@@ -28,9 +29,13 @@ namespace Backend.Controllers
 
                 return Ok(response);
             }
+            catch (GetException e)
+            {
+                return BadRequest(new BaseResponse(new List<string> { e.Message }, false));
+            }
             catch (Exception e)
             {
-                return new BadRequestObjectResult(new BaseResponse(new List<string> { e.Message }, false));
+                return Problem(e.Message);
             }
         }
     }

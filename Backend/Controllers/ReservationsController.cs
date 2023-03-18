@@ -1,4 +1,5 @@
-﻿using Backend.RequestsModels;
+﻿using Backend.Exceptions;
+using Backend.RequestsModels;
 using Backend.ResponsesModels;
 using Backend.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -31,9 +32,13 @@ namespace Backend.Controllers
 
                 return Ok(response);
             }
+            catch (PostException e)
+            {
+                return BadRequest(new BaseResponse(new List<string> { e.Message }, false));
+            }
             catch (Exception e)
             {
-                return new BadRequestObjectResult(new BaseResponse(new List<string> { e.Message }, false));
+                return Problem(e.Message);
             }
         }
 
@@ -52,9 +57,38 @@ namespace Backend.Controllers
 
                 return Ok(response);
             }
+            catch (GetException e)
+            {
+                return BadRequest(new BaseResponse(new List<string> { e.Message }, false));
+            }
             catch (Exception e)
             {
-                return new BadRequestObjectResult(new BaseResponse(new List<string> { e.Message }, false));
+                return Problem(e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Staff")]
+        [Route("GetAll/{fromNumber}/{toNumber}")]
+        public async Task<IActionResult> GetAll(int fromNumber, int toNumber)
+        {
+            if (!ModelState.IsValid)
+            {
+                return new BadRequestObjectResult(new BaseResponse(new List<string> { "Invalid data provided" }, false));
+            }
+            try
+            {
+                var response = await _reservationsService.GetUsersReservationsStaff(fromNumber, toNumber);
+
+                return Ok(response);
+            }
+            catch (GetException e)
+            {
+                return BadRequest(new BaseResponse(new List<string> { e.Message }, false));
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
             }
         }
     }

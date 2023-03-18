@@ -32,6 +32,13 @@ class ReservationsService {
         const response = await axios.get(url, { headers: CommonHeaders.getCommonHeaderWithType })
         return response;
     }
+
+    async getAllReservations(from, to) {
+        const url = API_URL + `Reservations/GetAll/${from}/${to}`;
+        axios.defaults.headers.common['Authorization'] = `Bearer ${store.state.auth.user.token}`;
+        const response = await axios.get(url, { headers: CommonHeaders.getCommonHeaderWithType })
+        return response;
+    }
     
 }
 

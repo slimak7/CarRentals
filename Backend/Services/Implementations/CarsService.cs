@@ -2,6 +2,7 @@
 using Backend.DBLogic.DBModels;
 using Backend.DBLogic.Repos.Cars;
 using Backend.DBLogic.Repos.Reservations;
+using Backend.Exceptions;
 using Backend.ResponsesModels;
 using Backend.Services.Interfaces;
 using Itenso.TimePeriod;
@@ -110,7 +111,7 @@ namespace Backend.Services.Implementations
             }
             else
             {
-                throw new Exception("No cars available with given criteria");
+                throw new GetException("No cars available with given criteria");
             }
         }
     }

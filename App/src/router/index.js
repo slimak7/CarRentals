@@ -6,6 +6,7 @@ import LoginPage from '../views/LoginPage.vue'
 import RegisterPage from '../views/RegisterPage.vue'
 import RentCarPage from '../views/RentCarPage.vue'
 import MyReservationsPage from '../views/MyReservationsPage.vue'
+import AllReservationsPage from '../views/AllReservationsPage.vue'
 
 const routes = [
     {
@@ -32,6 +33,11 @@ const routes = [
         path: '/myReservations',
         name: 'myReservations',
         component: MyReservationsPage,
+    },
+    {
+        path: '/allReservations',
+        name: 'allReservations',
+        component: AllReservationsPage,
     },
 ]
 

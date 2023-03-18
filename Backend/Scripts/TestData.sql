@@ -47,6 +47,12 @@ go
 
 select * from Cars
 
+--[STAFF TEST ACCOUNT]-------------------------------------------------------------------------------------------------------
 
+declare @staffRoleID uniqueidentifier = (SELECT UserTypeID from UsersTypes where TypeName = 'Staff')
+insert into Users values 
+(NEWID(), 'staff@gmail.com', 'Qwerty', 'staff', 'staff', '452658425', @staffRoleID)
+select * from Users
+go
 
 

@@ -1,5 +1,6 @@
 ﻿using Backend.DBLogic.DBModels;
 using Backend.DBLogic.Repos.Users;
+using Backend.Exceptions;
 using Backend.ResponsesModels;
 using Backend.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
@@ -27,7 +28,7 @@ namespace Backend.Services.Implementations
 
             if (user == null)
             {
-                throw new Exception("User with this email not found");
+                throw new PostException("User with this email not found");
             }
             else
             {
@@ -39,7 +40,7 @@ namespace Backend.Services.Implementations
                 }
                 else
                 {
-                    throw new Exception("Wrong password");
+                    throw new PostException("Wrong password");
                 }
             }
         }
@@ -65,7 +66,7 @@ namespace Backend.Services.Implementations
             }
             else
             {
-                throw new Exception("This email is already used");
+                throw new PostException("This email is already used");
             }
         }
 
