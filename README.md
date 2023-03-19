@@ -26,6 +26,7 @@ Small example to show how reservation algorithm works. Car ID is a car plate so 
 How to run project:
 1. Backend -> Scripts -> Run scripts in given order: Definitions, Predefined, TestData
 2. Backend -> appsettings.json -> Modify entry DBCarRenting to connect to created on step 1 DB.
-3. Run project
+3. App -> .env -> change backend URL to the one You will use.
+4. Run project
 
 To log in to staff account see script TestData. One example entry is given there. 
