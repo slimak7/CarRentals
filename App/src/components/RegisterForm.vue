@@ -94,7 +94,7 @@ export default {
   methods: {
     async register() {
       this.errorMessage = ''
-      
+
       let user = {
         email: this.email,
         password: this.password,

@@ -7,7 +7,7 @@ class AuthService {
     async login(user) {
         const url = API_URL + 'Auth/Login';
         const response = await axios.post(url, {
-            email : user.email,
+            email: user.email,
             password: user.password,
         }, { headers: CommonHeaders.getCommonHeadersJSONContent })
         return response;

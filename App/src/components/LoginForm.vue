@@ -24,53 +24,53 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      email: '',
-      emailLabel: '',
-      password: '',
-      passwordLabel: '',
-      loginLabel: '',
-      errorMessage: '',
-    }
-  },
-  computed: {
-    getUser() {
-      return this.$store?.state?.auth?.user
-    },
-  },
-  created() {
-    if (this.getUser) {
-      this.$router.push('/')
-    }
-
-    this.emailLabel = 'Email'
-    this.passwordLabel = 'Password'
-    this.loginLabel = 'Submit'
-  },
-  methods: {
-    async login() {
-      this.errorMessage = ''
-
-      let user = {
-        email: this.email,
-        password: this.password,
-      }
-
-      this.$store.dispatch('auth/login', user).then(
-          () => {         
-              window.location.reload();
-              this.$router.push('/')
+    export default {
+        data() {
+            return {
+                email: '',
+                emailLabel: '',
+                password: '',
+                passwordLabel: '',
+                loginLabel: '',
+                errorMessage: '',
+            }
         },
-        (err) => {
-          this.errorMessage = err?.response?.data.errors[0];
-          console.error(err)
-        }
-      )
-    },
-  },
-}
+        computed: {
+            getUser() {
+                return this.$store?.state?.auth?.user
+            },
+        },
+        created() {
+            if (this.getUser) {
+                this.$router.push('/')
+            }
+
+            this.emailLabel = 'Email'
+            this.passwordLabel = 'Password'
+            this.loginLabel = 'Submit'
+        },
+        methods: {
+            async login() {
+                this.errorMessage = ''
+
+                let user = {
+                    email: this.email,
+                    password: this.password,
+                }
+
+                this.$store.dispatch('auth/login', user).then(
+                    () => {
+                        window.location.reload();
+                        this.$router.push('/')
+                    },
+                    (err) => {
+                        this.errorMessage = err?.response?.data.errors[0];
+                        console.error(err)
+                    }
+                )
+            },
+        },
+    }
 </script>
 
 <style scoped>

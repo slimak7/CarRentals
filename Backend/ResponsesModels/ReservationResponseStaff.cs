@@ -4,5 +4,7 @@
     {
         public string ClientID { get; set; }
         public string ClientName { get; set; }
+
+        public string CarID { get; set; }
     }
 }

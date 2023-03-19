@@ -76,7 +76,7 @@
 <script>
     import LocationService from '../services/locations'
     import ReservationsService from '../services/reservations'
-export default {
+    export default {
         name: 'RentCarPage',
         data() {
             const now = new Date()
@@ -101,12 +101,12 @@ export default {
         computed: {
 
             totalCost() {
-                if  (this.fromDate && this.toDate && this.selectedCar) {
+                if (this.fromDate && this.toDate && this.selectedCar) {
 
                     const startingDate = new Date(this.fromDate);
                     const endingDate = new Date(this.toDate);
 
-                    return (((endingDate.getTime()-startingDate.getTime())/(24*3600*1000)) + 1) * this.selectedCar.pricePerDay;
+                    return (((endingDate.getTime() - startingDate.getTime()) / (24 * 3600 * 1000)) + 1) * this.selectedCar.pricePerDay;
                 }
                 else return null;
             },
@@ -118,7 +118,7 @@ export default {
                     return minDate;
                 }
                 else return this.minDate;
-                
+
             },
             maxFromDate() {
                 if (this.toDate) {
@@ -132,18 +132,18 @@ export default {
         async created() {
 
             await LocationService.getAllLocations().then((response) => {
-                
+
                 this.locations = response.data.locations;
             }).catch((error) => {
                 if (error.response.status == 401) {
-                    
+
                     this.$store.dispatch('auth/logout')
                     this.$router.push('/')
                     window.location.reload();
                 }
             });
-            
-            
+
+
         },
         methods: {
 
@@ -176,9 +176,12 @@ export default {
             },
             async searchForCars() {
 
+                this.selectedCar = null;
+                this.availableCarsModels = [];
+
                 await ReservationsService.getAvailableCars(this.selectedLocation.locationID, this.fromDate, this.toDate).then((response) => {
                     this.availableCarsModels = response.data.cars;
-                    
+
                 }).catch((error) => {
                     if (error.response.status == 401) {
 
@@ -193,9 +196,9 @@ export default {
                 })
 
             },
-            
+
         }
-}
+    }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -203,14 +206,13 @@ export default {
     blockquote p {
         font-size: 2em !important;
     }
+
     .card {
         width: 300px !important;
         margin: 2px
-        
     }
-    .card a {
-        background-color: darkblue;
-    }
-  
-    
+
+        .card a {
+            background-color: darkblue;
+        }
 </style>

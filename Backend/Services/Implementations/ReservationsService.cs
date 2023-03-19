@@ -42,7 +42,7 @@ namespace Backend.Services.Implementations
                     dateTo = reservation.DateTo.ToString("dd-MM-yyyy"),
                     carModelName = reservation.Car.Model.ModelName,
                     isPickedUp = reservation.isPickedUp,
-                    locationInfo = reservation.Location.LocationName + ", " + 
+                    locationInfo = reservation.Location.LocationName + ", " +
                     reservation.Location.Street + ", " + reservation.Location.Zipcode + ", " + reservation.Location.City,
                     totalCost = (timeRange.Duration.Days + 1) * reservation.Car.Model.PricePerDay
                 });
@@ -66,7 +66,7 @@ namespace Backend.Services.Implementations
             }
 
             int count = toNumber - fromNumber + 1;
-            
+
             if (count > reservations.Count() - fromNumber)
             {
                 count = reservations.Count() - fromNumber;
@@ -90,7 +90,8 @@ namespace Backend.Services.Implementations
                     reservation.Location.Street + ", " + reservation.Location.Zipcode + ", " + reservation.Location.City,
                     totalCost = (timeRange.Duration.Days + 1) * reservation.Car.Model.PricePerDay,
                     ClientID = reservation.User.UserID.ToString(),
-                    ClientName = reservation.User.FirstName + " " + reservation.User.LastName
+                    ClientName = reservation.User.FirstName + " " + reservation.User.LastName,
+                    CarID = reservation.Car.LicensePlateID
                 });
             }
 
@@ -102,26 +103,44 @@ namespace Backend.Services.Implementations
             bool limitToGivenLocation = DateFrom.Date == DateTime.Now.AddDays(1).Date;
             TimeRange givenTimeRange = new TimeRange(DateFrom.AddDays(-1), DateTo.AddDays(1));
 
-            var reservations = await _reservationsRepo.GetAllByCondition(x =>
+            var reservationsForGivenModel = await _reservationsRepo.GetAllByCondition(x =>
             {
-                TimeRange reservationTimeRange = new TimeRange(x.DateFrom, x.DateTo);
-
-                return (limitToGivenLocation ? x.Car.LocationIDFK == LocationID : true) && x.Car.ModelIDFK == CarModelID
-                    && !givenTimeRange.IntersectsWith(reservationTimeRange);
-
+                return (limitToGivenLocation ? x.Car.LocationIDFK == LocationID : true) && x.Car.ModelIDFK == CarModelID;
+                    
             });
 
-            if (!reservations.IsNullOrEmpty())
-            {
-                var car = reservations[0].Car;
+            var carsInReservations = reservationsForGivenModel.Select(x => x.Car);
 
+            Car selectedCar = null;
+
+            foreach(var car in carsInReservations)
+            {
+                var reservation = reservationsForGivenModel.Find(x =>
+                {
+                    TimeRange reservationTimeRange = new TimeRange(x.DateFrom, x.DateTo);
+
+                    return x.CarIDFK == car.LicensePlateID && reservationTimeRange.IntersectsWith(givenTimeRange);
+                });
+
+                if (reservation == null)
+                {
+                    selectedCar = car;
+                    break;
+                }
+
+            }
+
+            if (selectedCar != null)
+            {
                 await _reservationsRepo.Add(new Reservation()
                 {
+                    ReservationID = new Guid(),
                     UserIDFK = ClientID,
-                    CarIDFK = car.LicensePlateID,
+                    CarIDFK = selectedCar.LicensePlateID,
                     DateFrom = DateFrom,
                     DateTo = DateTo,
-                    LocationIDFK = LocationID                        
+                    LocationIDFK = LocationID,
+                    isPickedUp = false,
                 });
 
                 return new BaseResponse(null, true);
@@ -130,7 +149,7 @@ namespace Backend.Services.Implementations
             {
                 var cars = await _carsRepo.GetAllByCondition(x =>
                 {
-                    return (limitToGivenLocation? x.LocationIDFK == LocationID : true) && x.ModelIDFK == CarModelID;
+                    return (limitToGivenLocation ? x.LocationIDFK == LocationID : true) && x.ModelIDFK == CarModelID;
                 });
 
                 if (cars.IsNullOrEmpty())
@@ -142,15 +161,15 @@ namespace Backend.Services.Implementations
                 {
                     TimeRange reservationTimeRange = new TimeRange(x.DateFrom, x.DateTo);
 
-                    return (limitToGivenLocation? x.LocationIDFK == LocationID : true) && x.Car.ModelIDFK == CarModelID
+                    return (limitToGivenLocation ? x.LocationIDFK == LocationID : true) && x.Car.ModelIDFK == CarModelID
                         && reservationTimeRange.IntersectsWith(givenTimeRange);
 
                 });
 
-                var carsInReservations = carReservations.Select(x => x.CarIDFK).ToList();
+                var allCarsInReservations = carReservations.Select(x => x.CarIDFK).ToList();
                 foreach (var car in cars)
                 {
-                    if (!carsInReservations.Contains(car.LicensePlateID))
+                    if (!allCarsInReservations.Contains(car.LicensePlateID))
                     {
                         await _reservationsRepo.Add(new Reservation()
                         {
@@ -169,7 +188,7 @@ namespace Backend.Services.Implementations
 
                 throw new PostException("Selected model is currently unavailable");
             }
- 
+
         }
     }
 }

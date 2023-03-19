@@ -1,7 +1,5 @@
 ﻿using Backend.Exceptions;
-using Backend.RequestsModels;
 using Backend.ResponsesModels;
-using Backend.Services.Implementations;
 using Backend.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

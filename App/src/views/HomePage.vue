@@ -37,7 +37,7 @@
 </template>
 
 <script>
-export default {
+    export default {
         name: 'HomePage',
         created() {
 
@@ -49,18 +49,18 @@ export default {
                 this.$router.push('/allReservations')
             }
         }
-}
+    }
 </script>
 
 <style scoped>
     blockquote p {
         font-size: 2em !important;
     }
+
     #carousel-1.carousel.slide {
         width: 50% !important;
         margin: auto;
         border-radius: 50px;
-        overflow: hidden;        
+        overflow: hidden;
     }
-    
 </style>

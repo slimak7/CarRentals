@@ -2,7 +2,7 @@
 class CommonHeaders {
 
     getCommonHeaderJSONContent() {
-   
+
         return {
             'Content-Type': 'application/json',
             Accept: 'application/json',
@@ -10,7 +10,7 @@ class CommonHeaders {
     }
 
     getCommonGetHeaderWithType() {
-   
+
         return {
             'Content-Type': 'application/json',
             Accept: 'application/json',
@@ -20,4 +20,4 @@ class CommonHeaders {
 }
 
 export default new CommonHeaders();
-   
+

@@ -39,7 +39,7 @@ class ReservationsService {
         const response = await axios.get(url, { headers: CommonHeaders.getCommonHeaderWithType })
         return response;
     }
-    
+
 }
 
 export default new ReservationsService()

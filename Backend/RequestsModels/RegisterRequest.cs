@@ -14,6 +14,7 @@ namespace Backend.RequestsModels
         [Required]
         public string LastName { get; set; }
 
+        [Phone]
         [Required]
         public string PhoneNumber { get; set; }
     }

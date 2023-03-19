@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import ReservationsService from '../services/reservations'
-export default {
+    import ReservationsService from '../services/reservations'
+    export default {
         name: 'MyReservationsPage',
         data() {
             return {
@@ -30,7 +30,7 @@ export default {
 
             await ReservationsService.getAllReservations(this.from, this.to).then((response) => {
 
-                
+
                 this.reservations = response.data.reservations;
 
             }).catch(error => {
@@ -56,8 +56,11 @@ export default {
 
                 await ReservationsService.getAllReservations(this.from, this.to).then((response) => {
 
-                    
-                    this.reservations.push(response.data.reservations);
+                    response.data.reservations.forEach(x => {
+
+                        this.reservations.push(x);
+                    })
+
 
                 }).catch(error => {
                     if (error.response.status == 401) {
@@ -74,12 +77,16 @@ export default {
             }
 
         }
-}
+    }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
     blockquote p {
         font-size: 2em !important;
+    }
+
+    .b-table {
+        font-size: 13px;
     }
 </style>

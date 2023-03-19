@@ -27,30 +27,29 @@
 <script>
 
 
-export default {
-  name: 'MainHeader',
-  computed: {
-    currentUser() {
-        return this.$store.state.auth.user
-    },
-  },
-  methods: {
-      logout() {
-          this.$store.dispatch('auth/logout')
-          this.$router.push('/')
-          window.location.reload();
-          
-          
+    export default {
+        name: 'MainHeader',
+        computed: {
+            currentUser() {
+                return this.$store.state.auth.user
+            },
+        },
+        methods: {
+            logout() {
+                this.$store.dispatch('auth/logout')
+                this.$router.push('/')
+                window.location.reload();
+
+
+            }
+        },
     }
-  },
-}
 </script>
 
 <style scoped>
-    
-    
+
+
     .nav-link {
         cursor: pointer;
     }
-
 </style>

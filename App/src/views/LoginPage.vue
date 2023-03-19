@@ -9,7 +9,7 @@
 
                     <div>
                         <p class="mb-0">
-                             You don't have an account? 
+                            You don't have an account?
                             <a href="/register" class="text-white-50 fw-bold">Register</a>
                         </p>
                     </div>
@@ -20,15 +20,15 @@
 </template>
 
 <script>
-import LoginForm from '../components/LoginForm.vue'
+    import LoginForm from '../components/LoginForm.vue'
 
 
-export default {
-  name: 'LoginPage',
-  components: {
-    LoginForm,
-  },
-}
+    export default {
+        name: 'LoginPage',
+        components: {
+            LoginForm,
+        },
+    }
 </script>
 
 <style scoped>

@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import ReservationsService from '../services/reservations'
-export default {
+    import ReservationsService from '../services/reservations'
+    export default {
         name: 'MyReservationsPage',
         data() {
             return {
@@ -43,11 +43,7 @@ export default {
             })
 
         },
-        methods: {
-
-           
-        }
-}
+    }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -55,6 +51,4 @@ export default {
     blockquote p {
         font-size: 2em !important;
     }
-
-    
 </style>
