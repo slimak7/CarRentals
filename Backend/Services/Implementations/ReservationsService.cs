@@ -113,6 +113,8 @@ namespace Backend.Services.Implementations
 
             Car selectedCar = null;
 
+            List<string> reservedCars = new List<string>();
+
             foreach(var car in carsInReservations)
             {
                 var reservation = reservationsForGivenModel.Find(x =>
@@ -126,6 +128,10 @@ namespace Backend.Services.Implementations
                 {
                     selectedCar = car;
                     break;
+                }
+                else
+                {
+                    reservedCars.Add(car.LicensePlateID);
                 }
 
             }
@@ -157,19 +163,9 @@ namespace Backend.Services.Implementations
                     throw new PostException("Selected model is unavailable in this location");
                 }
 
-                var carReservations = await _reservationsRepo.GetAllByCondition(x =>
-                {
-                    TimeRange reservationTimeRange = new TimeRange(x.DateFrom, x.DateTo);
-
-                    return (limitToGivenLocation ? x.LocationIDFK == LocationID : true) && x.Car.ModelIDFK == CarModelID
-                        && reservationTimeRange.IntersectsWith(givenTimeRange);
-
-                });
-
-                var allCarsInReservations = carReservations.Select(x => x.CarIDFK).ToList();
                 foreach (var car in cars)
                 {
-                    if (!allCarsInReservations.Contains(car.LicensePlateID))
+                    if (!reservedCars.Contains(car.LicensePlateID))
                     {
                         await _reservationsRepo.Add(new Reservation()
                         {
