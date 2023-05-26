@@ -22,6 +22,12 @@ Update #4
 ![reservation_algorithm_example](https://user-images.githubusercontent.com/38327738/226184681-e5875339-6000-4151-a171-6fb94a248199.png)
 Small example to show how reservation algorithm works. Car ID is a car plate so it identifies particulary one car, so phrase: "different cars" means cars with different plates. We can see that 1st reservation and 3rd reservation are for the same model but due to the fact that date periods intersects with each other, different cars have been reserved. On 4th row we can see that another reservation has been made for this car model and once again another car has been reserved (we have to assure one day off beetween two reservation so the reservation can not be made for CarID = 977C5C6). On the 5th row we can see that another reservation has been made to the same car mentioned in previous sentence due to the fact that date ranges do not collide with each other. 
 
+Screenshots:
+![CarRentals01](https://github.com/slimak7/CarRentals/assets/38327738/c626a1c8-da5a-4fda-a04d-793bac046bce)
+![CarRentals02](https://github.com/slimak7/CarRentals/assets/38327738/8965124c-d657-4dbc-a8f8-07eddc3dcae1)
+![CarRentals03](https://github.com/slimak7/CarRentals/assets/38327738/1cad3df9-d2dd-480a-848b-e3633d4e0147)
+![CarRentals04](https://github.com/slimak7/CarRentals/assets/38327738/afab9dcb-f14b-4fe8-98ca-0fbf69618c0e)
+
 How to run project:
 1. Backend -> Scripts -> Run scripts in given order: Definitions, Predefined, TestData
 2. Backend -> appsettings.json -> Modify entry DBCarRenting to connect to created on step 1 DB.
