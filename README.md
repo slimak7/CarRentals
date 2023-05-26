@@ -1,4 +1,3 @@
-# HappyTeamRecruitmentTask
 Web app for car renting
 
 Update #1![DBDiagram](https://user-images.githubusercontent.com/38327738/223462639-d13bc2cc-546f-44b5-afac-144a6627fb2c.png)
